@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../boringssl/include/openssl/base.h
+stddef.h
+-
+stdint.h
+-
+sys/types.h
+-
+openssl/opensslconf.h
+-
+boringssl_prefix_symbols.h
+-
+
+../boringssl/include/openssl/opensslconf.h
+
+../boringssl/include/openssl/rc4.h
+openssl/base.h
+-
+
+/home/ren/quic/libquic/boringssl/crypto/rc4/rc4.c
+openssl/rc4.h
+-
+

@@ -1,0 +1,1 @@
+/bin/c++     -Wall -fpic -std=gnu++11 -std=c++0x -Wall -Werror -Wformat=2 -Wsign-compare -Wmissing-field-initializers -ggdb -fvisibility=hidden -Wmissing-declarations -Wshadow -g    CMakeFiles/spake25519_test.dir/spake25519_test.cc.o  -o spake25519_test -rdynamic ../libcrypto.a -lpthread 

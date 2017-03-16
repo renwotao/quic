@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../boringssl/include/openssl/base.h
+stddef.h
+-
+stdint.h
+-
+sys/types.h
+-
+openssl/opensslconf.h
+-
+boringssl_prefix_symbols.h
+-
+
+../boringssl/include/openssl/curve25519.h
+openssl/base.h
+-
+
+../boringssl/include/openssl/opensslconf.h
+
+/home/ren/quic/libquic/boringssl/crypto/curve25519/x25519_test.cc
+stdint.h
+-
+stdio.h
+-
+string.h
+-
+openssl/curve25519.h
+-
+
