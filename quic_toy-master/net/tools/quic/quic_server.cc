@@ -22,6 +22,8 @@
 #include "net/tools/quic/quic_epoll_clock.h"
 #include "net/tools/quic/quic_epoll_connection_helper.h"
 #include "net/tools/quic/quic_socket_utils.h"
+#include "net/tools/quic/quic_simple_crypto_server_stream_helper.h"
+#include "net/tools/quic/quic_epoll_alarm_factory.h"
 
 #ifndef SO_RXQ_OVFL
 #define SO_RXQ_OVFL 40
@@ -140,8 +142,12 @@ bool QuicServer::Listen(const IPEndPoint& address) {
       config_,
       &crypto_config_,
       supported_versions_,
-      new QuicEpollConnectionHelper(&epoll_server_, QuicAllocator::BUFFER_POOL),
-      new QuicEpollAlarmFactory(&epoll_server_)));
+      std::unique_ptr<QuicEpollConnectionHelper>(
+         new QuicEpollConnectionHelper(&epoll_server_, QuicAllocator::BUFFER_POOL)),
+      std::unique_ptr<QuicCryptoServerStream::Helper>(
+         new QuicSimpleCryptoServerStreamHelper(QuicRandom::GetInstance())),
+      std::unique_ptr<QuicEpollAlarmFactory>(
+         new QuicEpollAlarmFactory(&epoll_server_))));
   dispatcher_->InitializeWithWriter(new QuicDefaultPacketWriter(fd_));
 
   return true;

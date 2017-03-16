@@ -16,13 +16,13 @@ QuicEpollClock::QuicEpollClock(EpollServer* epoll_server)
 QuicEpollClock::~QuicEpollClock() {}
 
 QuicTime QuicEpollClock::ApproximateNow() const {
-  return QuicTime::Zero().Add(
-      QuicTime::Delta::FromMicroseconds(epoll_server_->ApproximateNowInUsec()));
+  return QuicTime::Zero() + 
+      QuicTime::Delta::FromMicroseconds(epoll_server_->ApproximateNowInUsec());
 }
 
 QuicTime QuicEpollClock::Now() const {
-  return QuicTime::Zero().Add(
-      QuicTime::Delta::FromMicroseconds(epoll_server_->NowInUsec()));
+  return QuicTime::Zero() +
+      QuicTime::Delta::FromMicroseconds(epoll_server_->NowInUsec());
 }
 
 }  // namespace tools
