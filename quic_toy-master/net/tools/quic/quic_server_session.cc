@@ -62,8 +62,7 @@ QuicCryptoServerStream* QuicServerSession::GetCryptoStream() {
 }
 
 ReliableQuicStream* QuicServerSession::CreateIncomingDynamicStream(QuicStreamId id) {
-  QuicServerStream* stream = new QuicServerStream(id, this, helper_);
-  stream->SetupPerformanceAlarm();
+  QuicServerStream* stream = new QuicServerStream(id, this);
   return stream;
 }
 

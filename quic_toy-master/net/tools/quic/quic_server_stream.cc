@@ -5,10 +5,8 @@
 namespace net {
   namespace tools {
 
-    QuicServerStream::QuicServerStream(QuicStreamId id, QuicSession* session, QuicConnectionHelperInterface* helper, QuicAlarmFactory* alarm_factory)
-      : ReliableQuicStream(id, session),
-        helper_(helper),
-        alarm_(alarm_factory->CreateAlarm(this)) {
+    QuicServerStream::QuicServerStream(QuicStreamId id, QuicSession* session)
+      : ReliableQuicStream(id, session) {
     }
 
     QuicServerStream::~QuicServerStream() {
@@ -38,18 +36,6 @@ namespace net {
     
     void QuicServerStream::WriteStringPiece(base::StringPiece data, bool fin) {
       this->WriteOrBufferData(data, fin, nullptr);
-    }
-
-    void QuicServerStream::SetupPerformanceAlarm() {
-      QuicTime onesecond = helper_->GetClock()->ApproximateNow() + QuicTime::Delta::FromSeconds(1);
-      alarm_->Set(onesecond);
-    }
-
-    void QuicServerStream::OnAlarm() {
-     /*
-      QuicWallTime now = helper_->GetClock()->WallNow();
-      std::cout << bytes_received << "\n";
-      return helper_->GetClock()->ApproximateNow().Add(QuicTime::Delta::FromSeconds(1));*/
     }
 
     void QuicServerStream::OnClose() {

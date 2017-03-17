@@ -12,27 +12,21 @@ namespace net {
 
   namespace tools {
 
-    class QuicServerStream: public ReliableQuicStream, public QuicAlarm::Delegate {
+    class QuicServerStream: public ReliableQuicStream {
     public:
       QuicServerStream(QuicStreamId id, 
-                       QuicSession* session,
-		       QuicConnectionHelperInterface* helper, 
-                       QuicAlarmFactory *alarm_factory);
+                       QuicSession* session);
       ~QuicServerStream();
 
       void OnDataAvailable();
 
       void WriteStringPiece(base::StringPiece data, bool fin);
 
-      void SetupPerformanceAlarm();
-
-      void OnAlarm();
 
       void OnClose();
 
     private:
       uint64_t bytes_received = 0;
-      QuicConnectionHelperInterface* helper_;
       QuicAlarm* alarm_;
     };
   }
