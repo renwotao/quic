@@ -174,9 +174,8 @@ void QuicServer::OnEvent(int fd, EpollEvent* event) {
     DVLOG(1) << "EPOLLIN";
     bool read = true;
     while (read) {
-      read = ReadAndDispatchSinglePacket(
-					 fd_, port_, dispatcher_.get(), dispatcher_.get()->helper(),
-					 overflow_supported_ ? &packets_dropped_ : nullptr);
+      read = ReadAndDispatchSinglePacket(fd_, port_, dispatcher_.get(), 
+      	dispatcher_.get()->helper(), overflow_supported_ ? &packets_dropped_ : nullptr);
     }
   }
   if (event->in_events & EPOLLOUT) {
