@@ -6,7 +6,6 @@
 
 #include "net/base/ip_endpoint.h"
 #include "net/tools/quic/quic_client.h"
-
 #include "base/at_exit.h"
 #include "base/command_line.h"
 #include "base/logging.h"
@@ -15,15 +14,15 @@
 #include "base/strings/string_util.h"
 #include "net/base/ip_endpoint.h"
 #include "net/base/net_errors.h"
-//#include "net/quic/quic_protocol.h"
 #include "net/quic/core/quic_server_id.h"
 #include "net/quic/core/quic_utils.h"
+#include "net/quic/core/crypto/proof_verifier.h"
 
 using namespace std;
 
-uint64 FLAGS_total_transfer = 10 * 1000 * 1000;
-uint64 FLAGS_chunk_size = 1000;
-uint64 FLAGS_duration = 0;
+uint64_t FLAGS_total_transfer = 10 * 1000 * 1000;
+uint64_t FLAGS_chunk_size = 1000;
+uint64_t FLAGS_duration = 0;
 
 string randomString(uint length) {
   string result = "";
@@ -31,6 +30,38 @@ string randomString(uint length) {
     result.push_back('a' + rand()%26);
   }
   return result;
+}
+
+namespace net {
+  class FakeProofVerifier : public ProofVerifier {
+     public:
+	net::QuicAsyncStatus VerifyProof(
+ 		const std::string& hostname,
+		const uint16_t port,
+		const std::string& server_config,
+		QuicVersion quic_version,
+		base::StringPiece chlo_hash,
+		const std::vector<std::string>& certs,
+		const std::string& cert_sct,
+		const std::string& signature,
+		const net::ProofVerifyContext* contex,
+		std::string* error_details,
+		std::unique_ptr<net::ProofVerifyDetails>* details,
+		std::unique_ptr<net::ProofVerifierCallback> callback) override {
+		return net::QUIC_SUCCESS;
+  	}
+
+	net::QuicAsyncStatus VerifyCertChain(
+		const std::string& hostname,
+		const std::vector<std::string>& certs,
+                const net::ProofVerifyContext* context,
+		std::string* error_details,
+		std::unique_ptr<net::ProofVerifyDetails>* details,
+		std::unique_ptr<net::ProofVerifierCallback> callback) override {
+		return net::QUIC_SUCCESS;
+	}
+
+  };
 }
 
 int main(int argc, char *argv[]) {
@@ -72,13 +103,14 @@ int main(int argc, char *argv[]) {
   unsigned char a, b, c, d;
   sscanf(address.c_str(), "%hhu.%hhu.%hhu.%hhu", &a, &b, &c, &d);
   printf("Connecting to %hhu.%hhu.%hhu.%hhu\n", a, b, c, d);
-  net::IPAddressNumber ip_address = (net::IPAddressNumber) std::vector<unsigned char>{a, b, c, d};
+  net::IPAddress ip_address = (net::IPAddress) std::vector<unsigned char>{a, b, c, d};
   net::IPEndPoint server_address(ip_address, 1337);
-  net::QuicServerId server_id(address, 1337, /*is_http*/ false, net::PRIVACY_MODE_DISABLED);
-  net::QuicVersionVector supported_versions = net::QuicSupportedVersions();
+  net::QuicServerId server_id(address, 1337, net::PRIVACY_MODE_DISABLED);
+  net::QuicVersionVector supported_versions = net::AllSupportedVersions();
   net::EpollServer epoll_server;
+  std::unique_ptr<net::ProofVerifier> proofVerifier(new net::FakeProofVerifier());
 
-  net::tools::QuicClient client(server_address, server_id, supported_versions, &epoll_server);
+  net::tools::QuicClient client(server_address, server_id, supported_versions, &epoll_server, std::move(proofVerifier));
   if (!client.Initialize()) {
     cerr << "Could not initialize client" << endl;
     return 1;
@@ -91,7 +123,7 @@ int main(int argc, char *argv[]) {
   cout << "Successfully connected to server, hopefully" << endl;
   net::tools::QuicClientStream* stream = client.CreateClientStream();
   if (FLAGS_duration == 0) {
-    for (uint64 i = 0; i < FLAGS_total_transfer; i += FLAGS_chunk_size) {
+    for (uint64_t i = 0; i < FLAGS_total_transfer; i += FLAGS_chunk_size) {
       stream->WriteStringPiece(base::StringPiece(randomString(FLAGS_chunk_size)), false);
       if (stream->HasBufferedData()) {
         client.WaitForEvents();
@@ -111,7 +143,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  stream->CloseConnection(net::QUIC_NO_ERROR);
+  stream->CloseConnectionWithDetails(net::QUIC_NO_ERROR, "close app");
   client.Disconnect();
 }
 
