@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 #include "net/tools/quic/quic_epoll_clock.h"
-
 #include "net/tools/epoll_server/epoll_server.h"
 
 namespace net {

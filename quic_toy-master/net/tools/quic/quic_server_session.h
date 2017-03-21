@@ -11,15 +11,12 @@
 #include <string>
 #include <vector>
 
-//#include "base/basictypes.h"
 #include "base/containers/hash_tables.h"
-//#include "base/memory/scoped_ptr.h"
 #include "net/quic/core/quic_crypto_server_stream.h"
 #include "net/quic/core/quic_protocol.h"
 #include "net/quic/core/quic_session.h"
 #include "net/quic/core/quic_connection.h"
 #include "net/quic/core/crypto/quic_compressed_certs_cache.h"
-
 #include "net/tools/quic/quic_server_stream.h"
 
 namespace net {
