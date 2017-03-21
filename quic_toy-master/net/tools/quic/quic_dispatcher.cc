@@ -3,9 +3,7 @@
 // found in the LICENSE file.
 
 #include "net/tools/quic/quic_dispatcher.h"
-
 #include <utility>
-
 #include "base/debug/stack_trace.h"
 #include "base/logging.h"
 #include "base/stl_util.h"

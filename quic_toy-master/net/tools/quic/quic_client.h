@@ -10,9 +10,7 @@
 
 #include <string>
 
-//#include "base/basictypes.h"
 #include "base/command_line.h"
-//#include "base/memory/scoped_ptr.h"
 #include "base/strings/string_piece.h"
 #include "net/base/ip_endpoint.h"
 #include "net/base/ip_address.h"

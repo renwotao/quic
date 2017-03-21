@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 #include "net/tools/quic/quic_default_packet_writer.h"
-
 #include "net/tools/quic/quic_socket_utils.h"
 
 namespace net {

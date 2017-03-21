@@ -8,9 +8,7 @@
 #ifndef NET_TOOLS_QUIC_QUIC_DISPATCHER_H_
 #define NET_TOOLS_QUIC_QUIC_DISPATCHER_H_
 
-//#include "base/basictypes.h"
 #include "base/containers/hash_tables.h"
-//#include "base/memory/std::unique_ptr.h"
 #include "net/base/ip_endpoint.h"
 #include "net/base/linked_hash_map.h"
 #include "net/quic/core/quic_blocked_writer_interface.h"

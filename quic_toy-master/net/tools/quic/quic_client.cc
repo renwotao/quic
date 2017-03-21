@@ -13,7 +13,6 @@
 
 #include "base/logging.h"
 #include "base/time/time.h"
-//#include "net/base/net_util.h"
 #include "net/quic/core/crypto/quic_random.h"
 #include "net/quic/core/quic_connection.h"
 #include "net/quic/core/quic_data_reader.h"
@@ -117,8 +116,7 @@ bool QuicClient::CreateUDPSocket() {
     overflow_supported_ = true;
   }
 
-  if (!QuicSocketUtils::SetReceiveBufferSize(fd_,
-                                             kDefaultSocketReceiveBuffer)) {
+  if (!QuicSocketUtils::SetReceiveBufferSize(fd_, kDefaultSocketReceiveBuffer)) {
     return false;
   }
 
@@ -172,7 +170,7 @@ bool QuicClient::Connect() {
       config_,
       new QuicConnection((QuicConnectionId) QuicRandom::GetInstance()->RandUint64(),
                          server_address_, helper_.get(),
-                         alarm_factory_.get(), writer, /*factory,*/
+                         alarm_factory_.get(), writer,
                          /* owns_writer= */ false, /* is_server */ Perspective::IS_CLIENT,
                          supported_versions_)));
 

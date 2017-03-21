@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "net/tools/quic/quic_client_session.h"
-
 #include "base/logging.h"
+#include "net/tools/quic/quic_client_session.h"
 #include "net/quic/core/crypto/crypto_protocol.h"
 #include "net/quic/core/quic_server_id.h"
 
