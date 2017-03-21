@@ -11,12 +11,10 @@
 #include <sys/socket.h>
 #include <string>
 
-//#include "base/basictypes.h"
 #include "net/base/ip_endpoint.h"
 #include "net/base/ip_address.h"
 #include "net/quic/core/quic_bandwidth.h"
 #include "net/quic/core/quic_types.h"
-//#include "net/base/net_util.h"
 
 namespace net {
 namespace tools {
