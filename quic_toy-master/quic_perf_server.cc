@@ -16,6 +16,51 @@
 using namespace std;
 int32_t FLAGS_port = 1337;
 
+namespace net {
+class DummyProofSource : public ProofSource {
+  public:
+    DummyProofSource() {}
+    ~DummyProofSource() override {}
+    
+    virtual bool GetProof(const IPAddress& server_ip,
+			  const std::string& hostname,
+                          const std::string& server_config,
+ 			  QuicVersion quic_version,
+                          base::StringPiece chlo_hash,
+                          scoped_refptr<Chain>* out_chain,
+                          std::string* out_signature,
+                          std::string* out_leaf_cert_sct) {
+    
+    std::vector<std::string> certs;
+    certs.push_back("Dummy_certs");
+    *out_chain = new ProofSource::Chain(certs);
+    *out_signature = "Dummy_signature";
+    *out_leaf_cert_sct = "Dummy_timestamp";
+    return true;
+
+    }
+    
+    void GetProof(const IPAddress& server_ip,
+                  const std::string& hostname,
+		  const std::string& server_config,
+	          QuicVersion quic_version,
+		  base::StringPiece chlo_hash,
+	 	  std::unique_ptr<Callback> callback) override {}
+    
+    void Run(bool ok,
+             const scoped_refptr<Chain>& chain,
+             const std::string& signature,
+             const std::string& leaf_cert_sct,
+             std::unique_ptr<Details> details) {}
+};
+}
+
+std::unique_ptr<net::ProofSource> CreateProofSource() {
+  std::unique_ptr<net::DummyProofSource> proof_source(
+    new net::DummyProofSource());
+  return std::move(proof_source);
+}
+
 int main(int argc, char *argv[]) {
 
   // Is needed for whatever reason
@@ -58,7 +103,7 @@ int main(int argc, char *argv[]) {
   net::QuicVersionVector supported_versions = net::AllSupportedVersions();
   net::EpollServer epoll_server;
 
-  net::tools::QuicServer server(nullptr, config, supported_versions);
+  net::tools::QuicServer server(CreateProofSource(), config, supported_versions);
 
 
   // Start listening on the specified address.
