@@ -70,11 +70,7 @@ int main(int argc, char *argv[]) {
   const base::CommandLine::StringVector& args = line->GetArgs();
   if (args.size() == 0) {
     cout << "No address to connect to was provided.\n"
-         << "eg: ./quic_perf_client 127.0.0.1.\n"
-         << "options:\n"
-         << "        t n: times of transfer data.\n"
-         << "        c n: chunk size of data.\n"
-         << "        d n: duration of every transfer.\n";
+         << "eg: ./quic_perf_client 127.0.0.1.\n";
     return 1;
   }
   std::string address = args[0];
